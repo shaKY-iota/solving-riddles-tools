@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   DO NOT ADD CSS HERE.
+   All styling must use Tailwind utility classes in Gleam files.
+   The only exception is --cell-size below, which cannot be
+   expressed as a Tailwind utility (uses min() + viewport units).
+   See CLAUDE.md > Styling for details.
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+:root {
+  /* landscape: 11 columns, 5 rows */
+  --cell-size: min(
+    calc((100vw - 1rem) / 11),
+    calc((100svh - 3.5rem) / 5),
+    120px
+  );
+}
+
+@media (orientation: portrait) {
+  :root {
+    /* Chart is rotated 90deg: horizontal space = svh, vertical space = svw */
+    --cell-size: min(
+      calc((100svh - 1rem) / 11),
+      calc((100svw - 3.5rem) / 5),
+      120px
+    );
+  }
+}
