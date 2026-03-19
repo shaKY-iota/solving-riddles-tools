@@ -1,4 +1,8 @@
+import gleam/dict
+import gleam/int
+import gleam/list
 import gleam/option.{None, Some}
+import gleam/result
 
 pub type Type {
   A
@@ -47,6 +51,82 @@ pub type Type {
   Wa
   Wo
   Nn
+}
+
+pub const kana_list = [
+  A,
+  I,
+  U,
+  E,
+  O,
+  Ka,
+  Ki,
+  Ku,
+  Ke,
+  Ko,
+  Sa,
+  Si,
+  Su,
+  Se,
+  So,
+  Ta,
+  Ti,
+  Tu,
+  Te,
+  To,
+  Na,
+  Ni,
+  Nu,
+  Ne,
+  No,
+  Ha,
+  Hi,
+  Fu,
+  He,
+  Ho,
+  Ma,
+  Mi,
+  Mu,
+  Me,
+  Mo,
+  Ya,
+  Yu,
+  Yo,
+  Ra,
+  Ri,
+  Ru,
+  Re,
+  Ro,
+  Wa,
+  Wo,
+  Nn,
+]
+
+pub fn move(kana: Type, step: Int) -> Type {
+  let index_dict =
+    kana_list
+    |> list.index_map(fn(a, i) { #(a, i) })
+    |> dict.from_list
+  let kana_dict =
+    kana_list
+    |> list.index_map(fn(a, i) { #(i, a) })
+    |> dict.from_list
+  let length = kana_list |> list.length
+  let result = {
+    use current_index <- result.try(index_dict |> dict.get(kana))
+    use remainder <- result.try(int.remainder(current_index + step, length))
+    let new_index = case remainder < 0 {
+      True -> remainder + length
+      False -> remainder
+    }
+    use new_kana <- result.try(kana_dict |> dict.get(new_index))
+    Ok(new_kana)
+  }
+
+  case result {
+    Ok(new_kana) -> new_kana
+    Error(_) -> kana
+  }
 }
 
 pub fn to_hiragana(kana: Type) -> String {
